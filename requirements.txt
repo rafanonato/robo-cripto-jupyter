@@ -17,6 +17,4 @@ zipp==3.5.0
 numpy
 pandas
 statsmodels
-pickle
-math
 sqlalchemy
