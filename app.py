@@ -6,8 +6,6 @@ import math
 import pickle
 import time
 from flask import Flask, jsonify, request
-import numpy as np
-import pandas as pd
 import math
 from sqlalchemy import create_engine
 
