@@ -9,6 +9,9 @@ from flask import Flask, jsonify, request
 import math
 from sqlalchemy import create_engine
 
+# Baixando os dados de DOGE COIN
+df = pd.read_parquet('https://drive.google.com/u/0/uc?id=17c2r9qbnsxPVxaYukrp6vhTY-CQy8WZa&export=download')
+
 app = Flask(__name__)
 
 def get_result(x):
@@ -114,6 +117,42 @@ def my_robot(tempo, token):
 
 
 token = '7815696ecbf1c96e6894b779456d330e'
+
+
+
+# Calculando qual a média de close dos próximos 10min
+df['forward_average'] = df[::-1]['close'].rolling(10).mean()[::-1].shift(-1)
+
+# Target será a diferença percentual do 'forward_average' com o 'close' atual 
+df['target'] = 100*(df['forward_average'] - df['close']) / df['close']
+
+test_treshold = '2021-06-01 00:00:00'
+
+train = df[df.index <= test_treshold]
+test = df[df.index > test_treshold]
+
+X_train = train.drop(columns=['target'])
+y_train = train['target']
+
+X_test = test.drop(columns=['target'])
+y_test = test['target']
+
+# Modelo linear simples
+model = sm.OLS(y_train,X_train).fit()
+model.summary()
+
+y_hat = model.predict(X_test)
+MSE = ((y_hat - y_test)**2).mean()
+
+MSE_assuming_all_zero = (y_test**2).mean()
+MSE_assuming_all_zero
+
+MAE_assuming_all_zero = (y_test.abs()).mean()
+MAE_assuming_all_zero
+
+# Salvando o modelo em um arquivo pickle para ser utilizado nas etapas seguintes
+filename = 'model_dummy.pickle'
+pickle.dump(model, open(filename, 'wb'))
 
 
 app.route("/")
