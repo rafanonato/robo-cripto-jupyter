@@ -39,7 +39,6 @@ def compute_quantity(coin_value, invest_value, significant_digits):
     print(rounded_number)
     return rounded_number  # .iloc[0]
 
-
 def how_much_i_have(ticker, token):
     status = api_post('status', payload={'token': token})
     status_this_coin = status.query(f"ticker == '{ticker}'")
@@ -49,9 +48,7 @@ def how_much_i_have(ticker, token):
         return 0
 
 def my_robot(tempo, token):
-    # model = pickle.load(open('nosso_modelo.pickle', 'rb'))
-    #  model = pickle.load(open('nosso_modelo.pkl', 'rb'))
-    ticker = 'BTCUSDT'
+    ticker = 'FGV'
     count_iter = 0
     valor_compra_venda = 10
 
@@ -66,11 +63,8 @@ def my_robot(tempo, token):
 
         # Isolando a linha mais recente
         df_last = df.iloc[-1]
-        print(df_last)
-        # df_last = df.iloc[[np.argmax(df['time'])]]
 
         # Calculando tendência, baseada no modelo linear criado
-        # tendencia = model.predict(df_last).iloc[0]
         tendencia = 1
 
         # A quantidade de cripto que será comprada/ vendida depende do valor_compra_venda e da cotação atual
@@ -122,19 +116,18 @@ def my_robot(tempo, token):
 token = '7815696ecbf1c96e6894b779456d330e'
 
 
-@app.route("/")
+app.route("/")
 def index():
     return "Robo Cripto"
 
 
-@app.route('/wakeup', methods=["POST"])
+app.route('/wakeup', methods=["POST"])
 def wakeup():
 
     tempo = int(request.form.get("time"))
     if not tempo:
         return "Group token must be provided", None
 
-    # my_robot é a função com o loop que realiza as compras/ vendas (conforme notebook 2_my_robot.ipynb)
     my_robot(tempo, token)
 if __name__ == '__main__':
     app.run(debug=True)
