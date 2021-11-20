@@ -157,7 +157,7 @@ pickle.dump(model, open(filename, 'wb'))
 
 app.route("/")
 def index():
-    return "Robo Cripto"
+    return "Nonato Cripto"
 
 
 app.route('/wakeup', methods=["POST"])

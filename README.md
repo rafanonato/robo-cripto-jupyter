@@ -1,3 +1,3 @@
-# Robô Crypto - ASN1 CryptoRocks
+# Nonato Robo Cripto
 
-Deploy utilizando o heroku (heroku.com).
+Deploy Heroku
